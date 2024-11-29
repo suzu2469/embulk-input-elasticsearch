@@ -1,5 +1,6 @@
 require 'excon'
 require 'elasticsearch'
+require 'elastic/transport'
 
 module Embulk
   module Input
@@ -24,7 +25,7 @@ module Embulk
         end
 
         def create_client(nodes: ,reload_connections: ,reload_on_failure: ,retry_on_failure: ,request_timeout:)
-          transport = ::Elasticsearch::Transport::Transport::HTTP::Faraday.new(
+          transport = ::Elastic::Transport::HTTP::Faraday.new(
             {
               hosts: nodes.map{ |node| Hash[node.map{ |k, v| [k.to_sym, v] }] },
               options: {
@@ -38,7 +39,7 @@ module Embulk
             }
           )
 
-          ::Elasticsearch::Client.new transport: transport
+          ::Elastic::Transport::Client.new transport: transport
         end
 
         def search_with_query(query)
